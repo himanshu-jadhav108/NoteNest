@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <title>Notes App</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+
+<body class="container mt-5">
+
+  {% with messages = get_flashed_messages(with_categories=true) %}
+  {% if messages %}
+  {% for category, message in messages %}
+  <div class="alert alert-{{ category }} alert-dismissible fade show" role="alert">
+    {{ message }}
+    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+  </div>
+  {% endfor %}
+  {% endif %}
+  {% endwith %}
+
+  <h2 class="mb-4">📝 Notes App</h2>
+  <h2 class="mb-4">Welcome to Notes App ✨</h2>
+
+  <form action="{{ url_for('add_note') }}" method="post" class="mb-4">
+    <input type="text" name="title" placeholder="Title" class="form-control mb-2" required>
+    <textarea name="content" placeholder="Write your note..." class="form-control mb-2" required></textarea>
+    <button type="submit" class="btn btn-primary w-100">Add Note</button>
+  </form>
+
+  <div class="row">
+    {% for note in notes %}
+    <div class="col-md-4">
+      <div class="card mb-3 shadow-sm">
+        <div class="card-body">
+          <h5 class="card-title">{{ loop.index }}. {{ note.title }}</h5>
+          <p class="card-text">{{ note.content }}</p>
+          <a href="{{ url_for('edit_note', id=note.id) }}" class="btn btn-sm btn-warning">Edit</a>
+          <a href="{{ url_for('delete_note', id=note.id) }}" class="btn btn-sm btn-danger">Delete</a>
+        </div>
+      </div>
+    </div>
+    {% endfor %}
+  </div>
+
+  <div class="text-center mt-4">
+    <a href="{{ url_for('logout') }}" class="logout">Logout</a>
+  </div>
+
+  <div class="text-center mt-5">
+    <spline-viewer class="robot" url="https://prod.spline.design/MVaZOhJv0m7pyUdS/scene.splinecode"></spline-viewer>
+  </div>
+
+  <script type="module" src="https://unpkg.com/@splinetool/viewer@1.10.48/build/spline-viewer.js"></script>
+  <script>
+    function toggleTheme() {
+      document.body.classList.toggle('light-mode');
+    }
+  </script>
+  <button onclick="toggleTheme()" class="btn btn-outline-light mt-3">Toggle Theme</button>
+  <script>
+    function toggleTheme() {
+      document.body.classList.toggle('light-mode');
+      localStorage.setItem('theme', document.body.classList.contains('light-mode') ? 'light' : 'dark');
+    }
+
+    // Load saved theme
+    window.onload = () => {
+      if (localStorage.getItem('theme') === 'light') {
+        document.body.classList.add('light-mode');
+      }
+    };
+  </script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+  <script>
+  setTimeout(() => {
+    const alerts = document.querySelectorAll('.alert');
+    alerts.forEach(alert => {
+      alert.classList.remove('show');
+      alert.classList.add('fade');
+      setTimeout(() => alert.remove(), 500);
+    });
+  }, 4000);
+</script>
+</body>
+<footer>
+  <p>© 2025 Notes App by HJ</p>
+</footer>
+</html>
